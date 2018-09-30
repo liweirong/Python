@@ -42,10 +42,13 @@ Within the download you'll find the following directories and files:
 │    └── README.md
 ```
 
+```
+windows程序如何生成目录结构树？
+1.电脑中打开cmd
+2.在cmd中进入要生成目录结构的目录
+3.输入：tree /f > list.txt（目录结构输入成功，并保存为一个list.txt文件）
+4.打开此文件，即可看到生成的目录结构树
+```
 ### 说明
 >此项目代码不是直接运行，是在集群上运行，请自行搭建好相关环境
 >作者QQ:2277839278 遇到问题可详聊
-
-```math
-\oint_C x^3\, dx + 4y^Z\ , dy
-```
