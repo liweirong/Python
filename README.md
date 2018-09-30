@@ -41,3 +41,7 @@ Within the download you'll find the following directories and files:
 │    ├── PythonBase                   pyton基本语法  
 │    └── README.md
 ```
+
+### 说明
+>此项目代码不是直接运行，是在集群上运行，请自行搭建好相关环境
+>作者QQ:2277839278 遇到问题可详聊
