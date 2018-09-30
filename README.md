@@ -27,7 +27,7 @@ python学习
 > 推荐系统的python部分代码
 
 # Project plan
-- [x] python基础加固
+- [ ] python基础加固
 - [x] 数据挖掘基础算法
 
 # File Structure
@@ -45,3 +45,7 @@ Within the download you'll find the following directories and files:
 ### 说明
 >此项目代码不是直接运行，是在集群上运行，请自行搭建好相关环境
 >作者QQ:2277839278 遇到问题可详聊
+
+```math
+\oint_C x^3\, dx + 4y^Z\ , dy
+```
