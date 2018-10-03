@@ -5,19 +5,19 @@ s2 = "这只皮靴号码不小，那只更合适"
 
 # 读取停用词表
 stop_words = set()
-with open('stop_words','r',encoding='utf-8') as f:
+with open('stop_words', 'r', encoding='utf-8') as f:
     for word_lst in f.readlines():
         word = word_lst[0]
         stop_words.add(word)
 # print(stop_words)
 
-s1_seg = '/'.join([x for x in jieba.cut(s1,cut_all=True) if x not in stop_words and x!=''])
-s1_lst = [x for x in jieba.cut(s1,cut_all=True) if x not in stop_words and x!='']
+s1_seg = '/'.join([x for x in jieba.cut(s1, cut_all=True) if x not in stop_words and x != ''])
+s1_lst = [x for x in jieba.cut(s1, cut_all=True) if x not in stop_words and x != '']
 print(s1_lst)
 s1_set = set(s1_lst)
 
-s2_seg = '/'.join([x for x in jieba.cut(s2,cut_all=True) if x!=''])
-s2_lst = [x for x in jieba.cut(s2,cut_all=True) if x!='']
+s2_seg = '/'.join([x for x in jieba.cut(s2, cut_all=True) if x != ''])
+s2_lst = [x for x in jieba.cut(s2, cut_all=True) if x != '']
 s2_set = set(s2_lst)
 
 word_dict = dict()
@@ -25,7 +25,7 @@ i = 0
 for word in s1_set.union(s2_set):
     # if word in stop_words:
     #     continue
-    word_dict[word]=i
+    word_dict[word] = i
     i += 1
 print(word_dict)
 
@@ -55,4 +55,3 @@ print(word_dict)
 
 # print(s1_seg)
 # print(s2_seg)
-

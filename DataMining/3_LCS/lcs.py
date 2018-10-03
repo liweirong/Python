@@ -18,8 +18,9 @@ def lcs(a, b):
                 l[i][j] = max(l[i - 1][j], l[i][j - 1])
     return l
 
+
 l = lcs(a=a, b=b)
-print (l)
+print(l)
 print("----------------------------")
 for i in l:
     print(i)
