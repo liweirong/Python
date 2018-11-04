@@ -16,11 +16,9 @@ def lcs(a, b):
                 l[i][j] = l[i - 1][j - 1] + 1
             else:
                 l[i][j] = max(l[i - 1][j], l[i][j - 1])
-    return l
+    return l[-1][-1]
 
 
 l = lcs(a=a, b=b)
-print(l)
-print("----------------------------")
-for i in l:
-    print(i)
+print("*" * 20)
+print(a + "和" + b + "最长字串的长度是: " + l)
