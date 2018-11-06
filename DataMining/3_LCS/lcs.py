@@ -19,6 +19,6 @@ def lcs(a, b):
     return l[-1][-1]
 
 
-l = lcs(a=a, b=b)
+l = lcs(a, b)
 print("*" * 20)
-print(a + "和" + b + "最长字串的长度是: " + l)
+print(a + "和" + b + "最长字串的长度是: " + str(l))

@@ -1,5 +1,7 @@
-package WordCount
+package main
+
 import scala.io.Source
+
 object WordCount {
 
   def main(args:Array[String]):Unit= {
