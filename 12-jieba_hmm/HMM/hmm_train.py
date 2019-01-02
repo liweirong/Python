@@ -1,7 +1,7 @@
 import math
 
 data_path = '../data/allfiles.txt'
-mod_path = '../data/model_file.txt'
+mod_path = '../data/model_file.txt' # 存数据
 
 
 def get_word_ch(word):
@@ -18,7 +18,7 @@ def get_word_ch(word):
 # 其中S状态为:B,M,E,S  S状态大小M=4
 STATUS_NUM = 4
 
-# 1.初始概率
+# 1.初始概率 都为零
 pi = [0.0 for col in range(STATUS_NUM)]
 pi_sum = 0.0
 
@@ -27,10 +27,10 @@ A = [[0.0 for col in range(STATUS_NUM)] for row in range(STATUS_NUM)]
 # print(A)
 A_sum = [0.0 for col in range(STATUS_NUM)]
 
-# 3.发射概率 b
-# [B:{'我'：cnt}]
+# 3.发射概率 b   比较多换成字典
+# [B:{'我'：cnt}] - 次数
 B = [dict() for col in range(STATUS_NUM)]
-B_sum = [0.0 for col in range(STATUS_NUM)]
+B_sum = [0.0 for col in range(STATUS_NUM)] # 概率需要求和
 
 # 打开文件，读取每一行
 f_txt = open(data_path, 'r', encoding='utf-8')
@@ -41,9 +41,10 @@ while True:
     if not line:
         break
     line = line.strip()
-    if len(line) < 1: continue
+    if len(line) < 1:
+        continue
 
-    words = line.split()
+    words = line.split() # 默认空格切分
     # print(words)
     # break
     ch_lst = []
@@ -78,13 +79,14 @@ while True:
     # print(status_lst)
     # break
 
+    # 开始统计------------------------
     for i in range(len(ch_lst)):
         cur_status = status_lst[i]
         cur_ch = ch_lst[i]
         # 存储初始量 Pi
         if i == 0:
             pi[cur_status] += 1.0
-            pi_sum += 1.0
+            pi_sum += 1.0 # 总和
         # 存储发射统计量 B
         if cur_ch in B[cur_status]:
             B[cur_status][cur_ch] += 1.0
@@ -94,7 +96,7 @@ while True:
 
         # 存储状态转移统计量 A
         if i + 1 < len(ch_lst) - 1:
-            A[cur_status][status_lst[i + 1]] += 1.0
+            A[cur_status][status_lst[i + 1]] += 1.0  # 对应BMES
             A_sum[cur_status] += 1.0
 
 f_txt.close()
@@ -109,6 +111,7 @@ for i in range(STATUS_NUM):
     # B
     for ch in B[i]:
         B[i][ch] /= B_sum[i]
+
 
 # 存储模型-> 模型文件：将概率转化成log形式
 f_mod = open(mod_path, 'wb')
