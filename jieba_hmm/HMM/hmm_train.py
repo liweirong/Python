@@ -1,7 +1,7 @@
 import math
 
 data_path = '../data/allfiles.txt'
-mod_path = '../data/model_file.txt' # 存数据
+mod_path = '../data/model_file.txt'  # 存数据
 
 
 def get_word_ch(word):
@@ -30,7 +30,7 @@ A_sum = [0.0 for col in range(STATUS_NUM)]
 # 3.发射概率 b   比较多换成字典
 # [B:{'我'：cnt}] - 次数
 B = [dict() for col in range(STATUS_NUM)]
-B_sum = [0.0 for col in range(STATUS_NUM)] # 概率需要求和
+B_sum = [0.0 for col in range(STATUS_NUM)]  # 概率需要求和
 
 # 打开文件，读取每一行
 f_txt = open(data_path, 'r', encoding='utf-8')
@@ -44,7 +44,7 @@ while True:
     if len(line) < 1:
         continue
 
-    words = line.split() # 默认空格切分
+    words = line.split()  # 默认空格切分
     # print(words)
     # break
     ch_lst = []
@@ -86,7 +86,7 @@ while True:
         # 存储初始量 Pi
         if i == 0:
             pi[cur_status] += 1.0
-            pi_sum += 1.0 # 总和
+            pi_sum += 1.0  # 总和
         # 存储发射统计量 B
         if cur_ch in B[cur_status]:
             B[cur_status][cur_ch] += 1.0
@@ -111,7 +111,6 @@ for i in range(STATUS_NUM):
     # B
     for ch in B[i]:
         B[i][ch] /= B_sum[i]
-
 
 # 存储模型-> 模型文件：将概率转化成log形式
 f_mod = open(mod_path, 'wb')
