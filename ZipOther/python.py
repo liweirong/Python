@@ -71,7 +71,7 @@ class Divnil:
                     with open("./Divnil/" + img_name + ".jpg", "wb") as f:
                         f.write(resp.content)
                 except IOError:
-                    print("下载失败"+img_name)
+                    print("下载失败" + img_name)
                     break
                 else:
                     print("下载成功")
