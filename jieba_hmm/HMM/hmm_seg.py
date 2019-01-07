@@ -51,7 +51,7 @@ def hmm_seg_func(ch=''):
 
     # init
     # 【概率，状态】
-    status_matrix = [[[0.0, 0] for col in range(ch_num)] \
+    status_matrix = [[[0.0, 0] for col in range(ch_num)]  \
                      for st in range(STATUS_NUM)]
 
     for i in range(STATUS_NUM):
@@ -124,8 +124,8 @@ def hmm_seg_func(ch=''):
 # print('/'.join(jieba.cut(ch,cut_all=False)))
 
 if __name__ == '__main__':
-    write_path = './write_file.txt'
-    read_path = './read_file.txt'
+    write_path = './write_file.txt'  # 输入
+    read_path = './read_file.txt'   # 输出 切完词后存储
     f_write = open(write_path, 'w', encoding='utf-8')
     f_seg = open(read_path, 'r', encoding='utf-8')
     import jieba
@@ -133,8 +133,8 @@ if __name__ == '__main__':
     for line in f_seg.readlines():
         line = line.strip()
         if len(line) < 1: continue
-        # s = hmm_seg_func(line)
-        s = ' '.join(jieba.cut(line, cut_all=False))
+        s = hmm_seg_func(line)
+        # s = ' '.join(jieba.cut(line, cut_all=False))
         f_write.write(s + '\n')
 
     f_seg.close()
