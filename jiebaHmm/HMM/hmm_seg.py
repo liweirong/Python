@@ -1,4 +1,4 @@
-from jieba_hmm.HMM import hmm_train
+from jiebaHmm.HMM import hmm_train
 
 mod_path = '../data/model_file.txt'
 
