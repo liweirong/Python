@@ -2,11 +2,11 @@ import pandas as pd
 import math
 import operator
 
-df = pd.read_csv('../jieba_hmm/data/u.data',
+df = pd.read_csv('../jiebaHmm/data/u.data',
                  sep='\t',
                  # nrows=100,
                  names=['user_id', 'item_id', 'rating', 'timestamp'])
-print("打分最大值" + max(df['rating']))
+# print("打分最大值" + str(max(df['rating'])))  # 打分最大值5
 d = dict()
 for _, row in df.iterrows():
     user_id = str(row['user_id'])
@@ -28,7 +28,8 @@ def user_normal_simmilarity(d):
         if u not in w:
             w[u] = dict()
         for v in d.keys():
-            if u == v: continue
+            if u == v:
+                continue
             w[u][v] = len(set(d[u]) & set(d[v]))
             w[u][v] = 2 * w[u][v] / (len(d[u]) + len(d[v])) * 1.0
     print(w['196'])
@@ -61,8 +62,10 @@ def user_sim(d):
             if C.get(u, -1) == -1:
                 C[u] = dict()
             for v in users:
-                if u == v: continue
-                if C[u].get(v, -1) == -1: C[u][v] = 0
+                if u == v:
+                    continue
+                if C[u].get(v, -1) == -1:
+                    C[u][v] = 0
                 C[u][v] += 1
                 # C[u][v] += 1/math.log(1+len(item_users[i]))   ## 这是解决热度问题
     del item_users
@@ -103,6 +106,7 @@ def recommend(user, d, C, k):
 
 rank = recommend('196', d, C, 10)
 print(len(rank))
+print("前十个用户:")
 print(rank)  # 前十个用户
 print(sorted(rank.items(), key=operator.itemgetter(1),
              reverse=True)[0:10])  # rank排序后的前十
