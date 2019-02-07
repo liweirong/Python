@@ -22,12 +22,12 @@ STATUS_NUM = 4
 pi = [0.0 for col in range(STATUS_NUM)]
 pi_sum = 0.0
 
-# 2.状态转移概率 alpha ：M*M矩阵
+# 2.状态转移概率 A alpha ：M*M矩阵
 A = [[0.0 for col in range(STATUS_NUM)] for row in range(STATUS_NUM)]
 # print(A)
 A_sum = [0.0 for col in range(STATUS_NUM)]
 
-# 3.发射概率 b   比较多换成字典
+# 3.发射概率 B   比较多换成字典
 # [B:{'我'：cnt}] - 次数
 B = [dict() for col in range(STATUS_NUM)]
 B_sum = [0.0 for col in range(STATUS_NUM)]  # 概率需要求和
@@ -95,7 +95,7 @@ while True:
         B_sum[cur_status] += 1.0
 
         # 存储状态转移统计量 A
-        if i + 1 < len(ch_lst) - 1:
+        if i + 1 < len(ch_lst):
             A[cur_status][status_lst[i + 1]] += 1.0  # 对应BMES
             A_sum[cur_status] += 1.0
 

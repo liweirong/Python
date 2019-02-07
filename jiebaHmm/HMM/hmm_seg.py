@@ -1,6 +1,7 @@
 from jiebaHmm.HMM import hmm_train
 
 mod_path = '../data/model_file.txt'
+# day14.10 维特比算法
 
 # 1. 加载模型参数
 # 1.1 初始化参数，用来存模型参数
@@ -13,12 +14,12 @@ B = [dict() for col in range(STATUS_NUM)]
 
 f = open(mod_path, 'r', encoding='utf-8')
 
-# 1.2 读取模型文件第一行，加载到pi向量中
+# 1.2 读取模型文件第一行，加载到【初始概率】pi向量中
 pi_tokens = f.readline().split()
 for i in range(STATUS_NUM):
     pi[i] = float(pi_tokens[i])
 # print(pi)
-# 1.3 读取M行，即M*M的矩阵A
+# 1.3 读取M行，即M*M的状态转移概率矩阵A
 for i in range(STATUS_NUM):
     A_i_tokens = f.readline().split()
     for j in range(STATUS_NUM):
@@ -26,10 +27,10 @@ for i in range(STATUS_NUM):
 
 # print(A)
 
-# 1.4 读取矩阵B：S(BMES)->O(中文每个字)
+# 1.4 读取【发射概率】矩阵B：S(BMES)->O(中文每个字)
 for i in range(STATUS_NUM):
     B_i_tokens = f.readline().split()
-    # 对应S状态中文字的个数
+    # token_num：对应S状态中文字的个数
     token_num = len(B_i_tokens)
     j = 0
     while j < token_num - 1:
@@ -40,18 +41,25 @@ f.close()
 
 # 2. 实现viterbi算法（预测最优路径）
 ch = "我在八斗学习大数据和机器学习"
+# S矩阵
+# B【概率，状态】，【概率，状态】，【概率，状态】...
+# M【概率，状态】，【概率，状态】，【概率，状态】...
+# E【概率，状态】，【概率，状态】，【概率，状态】...
+# S【概率，状态】，【概率，状态】，【概率，状态】...
 
+# O序列
+# k   ->    j
+# 我  ->   在
 
 # ch = "蓝天、碧水、净土保卫战顺利推进，各项民生事业加快发展，人民生活持续改善。京津冀协同发展、长江经济带发"
 
-
 def hmm_seg_func(ch=''):
     ch_lst = hmm_train.get_word_ch(ch)
-    ch_num = len(ch_lst)
+    ch_num = len(ch_lst)  # 字数
 
     # init
-    # 【概率，状态】
-    status_matrix = [[[0.0, 0] for col in range(ch_num)]  \
+    # S矩阵每个点为：【概率，状态】 - 二维
+    status_matrix = [[[0.0, 0] for col in range(ch_num)] \
                      for st in range(STATUS_NUM)]
 
     for i in range(STATUS_NUM):
@@ -65,19 +73,22 @@ def hmm_seg_func(ch=''):
             cur_pi = pi[i]
         status_matrix[i][0][0] = cur_pi + cur_B  # pi*发射概率
         status_matrix[i][0][1] = i  # 状态
+
     # 从1开始  k跳转到j  复杂度=T*M*M
-    for i in range(1, ch_num):  # i->T
+    for i in range(1, ch_num):  # i相当于T（总字数）
         # print([i for i in range(1,ch_num)])
         for j in range(STATUS_NUM):  # i->后一层M
             max_p = None
             max_status = None
             for k in range(STATUS_NUM):  # i->前一层的M
-                cur_A = A[k][j]
-                if cur_A == 0.0: cur_A = -1000000.0
+                cur_A = A[k][j]  # 跳转概率
+                if cur_A == 0.0:
+                    cur_A = -1000000.0  # 取log会导致负无穷，取很小的值
                 cur_p = status_matrix[k][i - 1][0] + cur_A  # pi*发射概率*转移
                 if max_p is None or max_p < cur_p:
                     max_p = cur_p
                     max_status = k
+
 
             if ch_lst[i] in B[j]:
                 cur_B = B[j][ch_lst[i]]
@@ -86,20 +97,20 @@ def hmm_seg_func(ch=''):
             status_matrix[j][i][0] = max_p + cur_B
             status_matrix[j][i][1] = max_status
 
-    # get max p path 最大概率路径
+    # get max p path 最大概率路径 回溯
     max_end_p = None
     max_end_status = None
     for i in range(STATUS_NUM):
         if max_end_p is None or status_matrix[i][ch_num - 1][0] > max_end_p:
             max_end_p = status_matrix[i][ch_num - 1][0]
             max_end_status = i
-    best_status_lst = [0 for ch in range(ch_num)]  # 最大路径
+    best_status_lst = [0 for ch in range(ch_num)]  # 最大路径  和字符串长度一样
     best_status_lst[ch_num - 1] = max_end_status  # 最后一个概率最大的状态
 
     c = ch_num - 1
     cur_best_status = max_end_status
     while c > 0:
-        pre_best_status = status_matrix[cur_best_status][c][1]  # 回溯
+        pre_best_status = status_matrix[cur_best_status][c][1]  # 回溯   1：状态
         best_status_lst[c - 1] = pre_best_status
         cur_best_status = pre_best_status
         c -= 1
@@ -112,7 +123,7 @@ def hmm_seg_func(ch=''):
     s = ""
     s += ch_lst[0]
     for i in range(1, ch_num):
-        # i-1 是E，S 或者 i是B，S
+        #                     i-1 是 E，S   或者                  i是 B，S
         if best_status_lst[i - 1] in {2, 3} or best_status_lst[i] in {0, 3}:
             s += " "
         s += ch_lst[i]
@@ -132,13 +143,16 @@ if __name__ == '__main__':
 
     for line in f_seg.readlines():
         line = line.strip()
-        if len(line) < 1: continue
+        if len(line) < 1:
+            continue
         s = hmm_seg_func(line)
         # s = ' '.join(jieba.cut(line, cut_all=False))
         f_write.write(s + '\n')
 
     f_seg.close()
     f_write.close()
+
+    # 扫多个文件-遍历文件切词
     # import os
     # for filename in os.listdir('./'):
-    #     print(filename)
+    #     print(filename)  # 拿到文件名

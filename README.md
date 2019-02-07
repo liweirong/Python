@@ -34,12 +34,16 @@ python学习
 Within the download you'll find the following directories and files:
 ```
 ├── Python
-│    ├── cf                           14.推荐算法
+│    ├── cf                           14.03-04 下午 推荐算法 Ucf
 │    ├── DataMining                   数据挖掘
 │    │    ├── 1_MapReduce          
 │    │    ├── 2_TF-IDF             
-│    │    ├── 3_LCS                最长公共子序列（Longest Common Subsequence）
-│    ├── PythonBase                   pyton基本语法  
+│    │    ├── 3_LCS                   最长公共子序列（Longest Common Subsequence）
+│    ├── PythonBase                   pyton基本语法
+│    ├── jiebaHmm  
+│    │    ├── data                    model_file.txt模型参数
+│    │    ├── HMM                     14.01 上午 hmm_seg.py维特比算法
+│    │    ├── notebook                14.03-04 下午 Ucf
 │    └── README.md
 ```
 
