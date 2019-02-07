@@ -4,10 +4,12 @@ import operator
 
 df = pd.read_csv('../jiebaHmm/data/u.data',
                  sep='\t',
-                 # nrows=100,
+                 # nrows=100, # 取一百个
                  names=['user_id', 'item_id', 'rating', 'timestamp'])
 # print("打分最大值" + str(max(df['rating'])))  # 打分最大值5
+# 加载整个字典
 d = dict()
+# _, row 其中'_'对应前面的编号0、1、2、3、4....
 for _, row in df.iterrows():
     user_id = str(row['user_id'])
     item_id = str(row['item_id'])
@@ -20,19 +22,19 @@ for _, row in df.iterrows():
 
 # print(d)
 
-# 1. 获得用户和用户之间的相似度
-# 1.1正常逻辑的用户相似度计算
-def user_normal_simmilarity(d):
-    w = dict()
+# 1 获得用户和用户之间的相似度
+# 1.1 正常逻辑的用户相似度计算
+def user_normal_similarity(d):
+    w = dict()  # 相似矩阵
     for u in d.keys():
         if u not in w:
             w[u] = dict()
         for v in d.keys():
             if u == v:
                 continue
-            w[u][v] = len(set(d[u]) & set(d[v]))
-            w[u][v] = 2 * w[u][v] / (len(d[u]) + len(d[v])) * 1.0
-    print(w['196'])
+            union = len(set(d[u]) & set(d[v]))  # 两个用户交集的数量
+            w[u][v] = 2.0 * union / (len(d[u]) + len(d[v]))  # 相似度计算求平均
+    print(w['196'])  # '196': {'242': 3, '393': 4}
     print('all user cnt : ', len(w.keys()))
     print('user_196 sim user cnt: ', len(w['196']))
     return w
@@ -47,7 +49,8 @@ def user_sim(d):
             if i not in item_users:
                 item_users[i] = set()
             item_users[i].add(u)
-    # 物品热度
+    # 业内常用！！！！这是解决热度问题！！热度较高权重会变低
+    # ######      物品热度      ######
     # i_pop = 1/math.log(1+len(item_users[i]))
     # print(item_users['257'])
     # print(len(item_users['257']))
@@ -57,29 +60,30 @@ def user_sim(d):
     N = dict()  # 存放用户对应的item数量
     for i, users in item_users.items():
         for u in users:
-            if N.get(u, -1) == -1: N[u] = 0
+            if N.get(u, -1) == -1:  # 初始化1
+                N[u] = 0
             N[u] += 1
-            if C.get(u, -1) == -1:
+            if C.get(u, -1) == -1:  # 获取不到
                 C[u] = dict()
             for v in users:
                 if u == v:
                     continue
-                if C[u].get(v, -1) == -1:
+                if C[u].get(v, -1) == -1:  # 初始化2
                     C[u][v] = 0
                 C[u][v] += 1
-                # C[u][v] += 1/math.log(1+len(item_users[i]))   ## 这是解决热度问题
-    del item_users
+                # C[u][v] += 1/math.log(1+len(item_users[i]))   ## 业内常用！！！！这是解决热度问题！！
+    del item_users  # 把数据从内存中清理掉 item_users
     # max_cuv = 0.0
     # 计算最终的相似度
     for u, sim_users in C.items():
         for v, cuv in sim_users.items():
-            C[u][v] = 2 * cuv / ((N[u] + N[v]) * 1.0)  # 相同的数量/两个的平均值
-            # if max_cuv<2*cuv / ((N[u]+N[v])*1.0):
+            C[u][v] = 2.0 * cuv / (N[u] + N[v])  # 相同的数量/两个的平均值
+            # if max_cuv < 2*cuv / ((N[u]+N[v])*1.0):
             #     max_cuv = 2*cuv / ((N[u]+N[v])*1.0)
     print(C['244'])
-    print('all user cnt : ', len(C.keys()))
+    print('all user cnt : ', len(C.keys()))  # 943
     print('user sim user cnt: ', len(C['244']))
-    # print('max_cuv:',max_cuv)
+    # print('max_cuv:',max_cuv)  # 0.91228
     return C
 
 
@@ -92,21 +96,23 @@ def recommend(user, d, C, k):
     rank = dict()
     # 用户评论过的电影
     interacted_items = d[user].keys()
-    for v, cuv in sorted(C[user].items(), key=operator.itemgetter(1),
-                         reverse=True)[0:k]:
+    # v:电影商品、cuv:分值                        (1) = 相似度的分值，取倒序            取k个
+    for v, cuv in sorted(C[user].items(), key=operator.itemgetter(1), reverse=True)[0:k]:
         for i, rating in d[v].items():  # rating 打分
             if i in interacted_items:
                 # 过滤掉已经评论过的电影（购买过的商品）
                 continue
             elif rank.get(i, -1) == -1:
                 rank[i] = 0
-            rank[i] += cuv * rating
+            rank[i] += cuv * rating  # 相似度 * 打分
+
     return rank  # 物品集合含打分
 
 
 rank = recommend('196', d, C, 10)
-print(len(rank))
+print("rank length:", len(rank))
 print("前十个用户:")
 print(rank)  # 前十个用户
 print(sorted(rank.items(), key=operator.itemgetter(1),
              reverse=True)[0:10])  # rank排序后的前十
+# [('100', 9.851188941720837), ('204', 8.791450922163456), ('211', 6.934643640329933), ('50', 6.703137256491896), ('56', 6.644745314666279), ('210', 6.343957775195162), ('514', 6.126770101477048), ('283', 6.097763471099605), ('216', 5.895079501083604), ('168', 5.732076556369226)]

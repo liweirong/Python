@@ -34,7 +34,7 @@ python学习
 Within the download you'll find the following directories and files:
 ```
 ├── Python
-│    ├── cf                           14.03-04 下午 推荐算法 Ucf
+│    ├── cf                           14.03-04 下午 推荐算法 Ucf、基于用户相似的推荐
 │    ├── DataMining                   数据挖掘
 │    │    ├── 1_MapReduce          
 │    │    ├── 2_TF-IDF             
