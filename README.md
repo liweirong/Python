@@ -44,6 +44,7 @@ Within the download you'll find the following directories and files:
 │    │    ├── data                    model_file.txt模型参数
 │    │    ├── HMM                     14.01 上午 hmm_seg.py维特比算法
 │    │    ├── notebook                14.03-04 下午 Ucf
+│    ├── lr                           15.03 lr单机实现  
 │    └── README.md
 ```
 
