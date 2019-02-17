@@ -34,6 +34,7 @@ python学习
 Within the download you'll find the following directories and files:
 ```
 ├── Python
+│    ├── bayes                        18.02-03 朴素贝叶斯原理：新闻分类实现
 │    ├── cf                           14.03-04 下午 推荐算法 Ucf、基于用户相似的推荐
 │    ├── DataMining                   数据挖掘
 │    │    ├── 1_MapReduce          

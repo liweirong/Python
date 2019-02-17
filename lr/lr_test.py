@@ -62,15 +62,12 @@ m, n = shape(data)  # m=100 n=3
 alpha = 0.015  # 步长
 maxIter = 10000  # 最大迭代次数
 weights = ones((n, 1))  # 3 * 1的向量,w1 <=> b  | W  3行1列
-# weights:
-# [[1.]
-#  [1.]
-#  [1.]]
 # print('-label.T  ',-label)
 print(ones((m, 1)).T - label.T)
 i = 0
 loss = None
 # for k in range(maxIter):
+# 损失函数是为了选择最好的参数
 while i < maxIter:
     y = sigmoid(data * weights)  # 100*1  yi 1-yi
     l_wx = -label.T * log(y) - (ones((m, 1)).T - label.T) * log(1 - y)
