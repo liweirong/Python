@@ -80,7 +80,7 @@ def user_sim(d):
             C[u][v] = 2.0 * cuv / (N[u] + N[v])  # 相同的数量/两个的平均值
             # if max_cuv < 2*cuv / ((N[u]+N[v])*1.0):
             #     max_cuv = 2*cuv / ((N[u]+N[v])*1.0)
-    print(C['244'])
+    print("C['244']", C['244'])
     print('all user cnt : ', len(C.keys()))  # 943
     print('user sim user cnt: ', len(C['244']))
     # print('max_cuv:',max_cuv)  # 0.91228
@@ -90,9 +90,15 @@ def user_sim(d):
 C = user_sim(d)
 user = '196'
 
+'''
+user    :   用户id user = '196'
+d       :   d[user_id][item_id] = rating(打分)   {用户1：{商品1:3,商品2:2...}...}
+C       :   建立item->users的倒排表(相似度) {用户1:{用户2:0.50097,...}...}
+k       :  topNum
+'''
+
 
 def recommend(user, d, C, k):
-    items = list()
     rank = dict()
     # 用户评论过的电影
     interacted_items = d[user].keys()
@@ -108,8 +114,8 @@ def recommend(user, d, C, k):
 
     return rank  # 物品集合含打分
 
-
 rank = recommend('196', d, C, 10)
+print("------------------", C)
 print("rank length:", len(rank))
 print("前十个用户:")
 print(rank)  # 前十个用户
