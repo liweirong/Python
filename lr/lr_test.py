@@ -15,7 +15,7 @@ label = []
 fr = open('data/testSet.txt')
 for line in fr.readlines():
     line = line.strip().split()  # ['-0.017612', '14.053064', '0']
-    data.append([1.0, float(line[0]), float(line[1])])  # 多元线性回归，对数据进行处理，统一多加一
+    data.append([1.0, float(line[0]), float(line[1])])  # 多元线性回归，对数据进行处理，统一多加一 : [1,x1,x2]
     label.append(int(line[2]))
 
 
@@ -30,7 +30,7 @@ def plot_function(data, label, weights=None):
     x2 = []
     y2 = []
     for i in range(n):
-        if int(label[i]) == 1:
+        if int(label[i]) == 1:  # 正样本
             x1.append(data[i][1])
             y1.append(data[i][2])
         else:
@@ -42,7 +42,7 @@ def plot_function(data, label, weights=None):
     ax.scatter(x1, y1, s=100, c='red', marker='s')
     ax.scatter(x2, y2, s=100, c='black')
 
-    if weights != None:
+    if weights is not None:
         x = arange(-3.0, 3.0, 0.1)  # 按照间隔0.1去取
         y = -(weights[0] + weights[1] * x) / weights[2]  # x2=-(w1x1+w[0])/w2
     ax.plot(x, y)
@@ -56,7 +56,7 @@ def sigmoid(t):
     return 1.0 / (1 + exp(-t))
 
 
-data = mat(data)  # matrix 100*3
+data = mat(data)  # matrix矩阵 100*3
 label = mat(label).transpose()  # 或者 .T  转置
 m, n = shape(data)  # m=100 n=3
 alpha = 0.015  # 步长
